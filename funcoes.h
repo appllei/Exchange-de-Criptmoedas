@@ -1,30 +1,57 @@
 #ifndef FUNCOES_H
 #define FUNCOES_H
 
-#include "structs.h"
+#define MAX_USUARIOS 100
+#define MAX_CRIPTOMOEDAS 10
+#define MAX_EXTRATO_SIZE 1000
+#define MAX_NOME_CRIPTO 50
+#define CPF_SIZE 12  // Definição do tamanho do CPF (sem contar o '\0')
 
-//Função que cadastra um novo usuário
-int cadastrarUsuario(Usuario usuarios[], int *qtdUsuarios);
+// Estrutura de Usuario com CPF
+typedef struct {
+    char nome[100];
+    char cpf[15];
+    double saldoBRL;
+    double saldoBitcoin;
+    double saldoEthereum;
+    double saldoRipple;
+    double cotacaoBitcoin;
+    double cotacaoEthereum;
+    double cotacaoRipple;
+    char extrato[MAX_EXTRATO_SIZE];
+} Usuario;
 
-// Função que gerencia os usuários
+
+typedef struct {
+    char nome[MAX_NOME_CRIPTO];
+    double cotacaoAtual;
+    double taxaCompra;
+    double taxaVenda;
+} Criptomoeda;
+
+typedef struct {
+    double cotacoes[MAX_CRIPTOMOEDAS];
+} Cotacoes;
+
+// Declaração das funções para gerenciar usuários
 int carregarUsuarios(Usuario usuarios[]);
-void salvarUsuarios(Usuario usuarios[], int qtd);
-int encontrarUsuario(Usuario usuarios[], int qtd, char *cpf);
-void registrarTransacao(Usuario *usuario, TipoOperacao tipo, double valor,
-                        double taxa, Criptomoeda moeda);
-// Função auxiliar
-void obterDataAtual(char *buffer);
-
-// Função de autenticação
-int efetuarLogin(Usuario usuarios[], int qtd);
-
-// Função das operações financeiras
-void consultarSaldo(Usuario *usuario);
-void consultarExtrato(Usuario *usuario);
+int salvarUsuarios(Usuario usuarios[], int qtdUsuarios);
+int cadastrarUsuario(Usuario usuarios[], int *qtdUsuarios);
+int efetuarLogin(Usuario usuarios[], int qtdUsuarios);
+void excluirUsuario(Usuario usuarios[], int *qtdUsuarios);
+void consultarSaldo(const Usuario *usuario);
+void consultarExtrato(const Usuario *usuario);
 void depositarBRL(Usuario *usuario);
 void sacarBRL(Usuario *usuario);
-void comprarCriptomoeda(Usuario *usuario, Cotacoes *cotacoes);
-void venderCriptomoeda(Usuario *usuario, Cotacoes *cotacoes);
-void atualizarCotacoes(Cotacoes *cotacoes);
+
+// Declaração das funções para gerenciar criptomoedas
+int carregarCriptomoedas(Criptomoeda criptomoedas[]);
+int salvarCriptomoedas(Criptomoeda criptomoedas[], int qtdCriptomoedas);
+void cadastrarCriptomoeda(Criptomoeda criptomoedas[], int *qtdCriptomoedas);
+void excluirCriptomoeda(Criptomoeda criptomoedas[], int *qtdCriptomoedas);
+void inicializarCotacoes(Cotacoes *cotacoes);
+void atualizarCotacoes(Criptomoeda criptomoedas[], int qtdCriptomoedas);
+void comprarCriptomoeda(Usuario *usuario, Criptomoeda criptomoedas[], int qtdCriptomoedas);
+void venderCriptomoeda(Usuario *usuario, Criptomoeda criptomoedas[], int qtdCriptomoedas);
 
 #endif
