@@ -1,19 +1,18 @@
 #include <stdio.h>
 #include <string.h>
 #include "funcoes.h"
-#include <string.h>
-
 
 int main() {
     Usuario usuarios[MAX_USUARIOS];
+    Criptomoeda criptomoedas[MAX_CRIPTOMOEDAS];
     Cotacoes cotacoes;
+    int qtdUsuarios = carregarUsuarios(usuarios);
+    int qtdCriptomoedas = carregarCriptomoedas(criptomoedas);
+
     inicializarCotacoes(&cotacoes);
 
-    int qtdUsuarios = carregarUsuarios(usuarios);
-
-    // Caso não haja usuário, solicitar cadastro de um novo usário
-    if(qtdUsuarios == 0) {
-        printf("Nenhum usuário encontrado. Por favor, cadastre um novo usuário.\n");
+    if (qtdUsuarios == 0) {
+        printf("Nenhum usuário encontrado. Cadastre um novo usuário.\n");
         if (cadastrarUsuario(usuarios, &qtdUsuarios) != 0) {
             printf("Falha no cadastro. Encerrando o programa.\n");
             return 0;
@@ -21,20 +20,17 @@ int main() {
     }
 
     int userIndex = -1;
-    while(userIndex == -1) {
+    while (userIndex == -1) {
         userIndex = efetuarLogin(usuarios, qtdUsuarios);
-        if(userIndex == -1) {
-            printf("Deseja cadastrar um novo usuário? (1 - Sim, 0 - Não): ");;
+        if (userIndex == -1) {
+            printf("Deseja cadastrar um novo usuário? (1 - Sim, 0 - Não): ");
             int escolha;
             scanf("%d", &escolha);
-            if(escolha == 1) {
-                if (cadastrarUsuario(usuarios, &qtdUsuarios) != 0);
-                if(escolha == 0) {
-                    printf("Sessão finalizada.\n");
-                     return 0;
-                }
-                
-               
+            if (escolha == 1) {
+                cadastrarUsuario(usuarios, &qtdUsuarios);
+            } else {
+                printf("Sessão finalizada.\n");
+                return 0;
             }
         }
     }
@@ -49,13 +45,16 @@ int main() {
         printf("5. Comprar Criptomoeda\n");
         printf("6. Vender Criptomoeda\n");
         printf("7. Atualizar Cotações\n");
+        printf("8. Cadastrar Criptomoeda\n");
+        printf("9. Excluir Criptomoeda\n");
+        printf("10. Excluir Usuário\n");
         printf("0. Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
 
-        switch(opcao) {
+        switch (opcao) {
             case 1:
-                consultarSaldo(&usuarios[userIndex]);
+                consultarSaldos(&usuarios[userIndex]);
                 break;
             case 2:
                 consultarExtrato(&usuarios[userIndex]);
@@ -69,18 +68,28 @@ int main() {
                 salvarUsuarios(usuarios, qtdUsuarios);
                 break;
             case 5:
-                comprarCriptomoeda(&usuarios[userIndex], &cotacoes);
+                comprarCriptomoeda(&usuarios[userIndex], criptomoedas, qtdCriptomoedas);
                 salvarUsuarios(usuarios, qtdUsuarios);
                 break;
             case 6:
-                venderCriptomoeda(&usuarios[userIndex], &cotacoes);
+                venderCriptomoeda(&usuarios[userIndex], criptomoedas, qtdCriptomoedas);
                 salvarUsuarios(usuarios, qtdUsuarios);
                 break;
             case 7:
-                atualizarCotacoes(&cotacoes);
+                atualizarCotacoes(criptomoedas, qtdCriptomoedas);
+                salvarCriptomoedas(criptomoedas, qtdCriptomoedas);
                 break;
-            case 8: 
-                cadastrarUsuario(usuarios, &qtdUsuarios);
+            case 8:
+                cadastrarCriptomoeda(criptomoedas, &qtdCriptomoedas);
+                salvarCriptomoedas(criptomoedas, qtdCriptomoedas);
+                break;
+            case 9:
+                excluirCriptomoeda(criptomoedas, &qtdCriptomoedas);
+                salvarCriptomoedas(criptomoedas, qtdCriptomoedas);
+                break;
+            case 10:
+                excluirUsuario(usuarios, &qtdUsuarios);
+                salvarUsuarios(usuarios, qtdUsuarios);
                 break;
             case 0:
                 printf("Sessão finalizada.\n");
@@ -88,10 +97,9 @@ int main() {
             default:
                 printf("Opção inválida.\n");
         }
+    } while (opcao != 0);
 
-    } while(opcao != 0);
-
-    // Salva os dados antes de finalizar o programa
     salvarUsuarios(usuarios, qtdUsuarios);
+    salvarCriptomoedas(criptomoedas, qtdCriptomoedas);
     return 0;
 }

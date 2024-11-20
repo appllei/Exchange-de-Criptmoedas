@@ -1,49 +1,31 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#include <time.h>
+#define MAX_USUARIOS 100
+#define MAX_CRIPTOMOEDAS 50
+#define MAX_NOME_CRIPTO 50
+#define CPF_SIZE 15
 
-#define MAX_USUARIOS 10
-#define MAX_TRANSACOES 100
-#define CPF_SIZE 12
-#define SENHA_SIZE 20
-#define DATA_SIZE 20
-
-typedef enum {
-    COMPRA,
-    VENDA
-} TipoOperacao;
-
-typedef enum {
-    BITCOIN,
-    ETHEREUM,
-    RIPPLE,
-    NONE
-} Criptomoeda;
-
+// Estrutura para armazenar informações de um usuário
 typedef struct {
-    char data[DATA_SIZE];
-    TipoOperacao tipo;
-    double valor;
-    double taxa;
-    Criptomoeda moeda;
-} Transacao;
-
-typedef struct {
+    char nome[50];
     char cpf[CPF_SIZE];
-    char senha[SENHA_SIZE];
     double saldoBRL;
-    double saldoBitcoin;
-    double saldoEthereum;
-    double saldoRipple;
-    Transacao transacoes[MAX_TRANSACOES];
-    int qtdTransacoes;
+    char extrato[500];
 } Usuario;
 
+// Estrutura para armazenar informações de uma criptomoeda
 typedef struct {
+    char nome[50];
+    double cotacaoAtual;
+    double taxaCompra;
+    double taxaVenda;
+} Criptomoeda;
+
+// Estrutura para armazenar as cotações de moedas
+typedef struct {
+    double brl;
     double bitcoin;
-    double ethereum;
-    double ripple;
 } Cotacoes;
 
 #endif
