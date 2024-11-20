@@ -151,8 +151,8 @@ int efetuarLogin(Usuario usuarios[], int qtd) {
 void consultarSaldo(Usuario *usuario) {
   printf("\nSaldo da Carteira\n");
   printf("R$: %.2lf\n", usuario->saldoBRL);
-  printf("Bitcoin: %.6lf\n", usuario->saldoBitcoin);
   printf("Ethereum: %.6lf\n", usuario->saldoEthereum);
+  printf("Bitcoin: %.6lf\n", usuario->saldoBitcoin);
   printf("Ripple: %.6lf\n", usuario->saldoRipple);
 }
 
